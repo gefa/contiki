@@ -104,12 +104,12 @@ abc_recv(struct abc_conn *c)
     PROCESS_CONTEXT_BEGIN(&radio_test_process);
     set(&recv, ON);
     recv_count++;
-    if (((char *)packetbuf_dataptr())[sizeof(HEADER)] ? ON : OFF) {
-      set(&other, ON);
-      other_count++;
-    } else {
-      set(&other, OFF);
-    }
+    // if (((char *)packetbuf_dataptr())[sizeof(HEADER)] ? ON : OFF) {
+    //   set(&other, ON);
+    //   other_count++;
+    // } else {
+    //   set(&other, OFF);
+    // }
     /* synchronize the sending to keep the nodes from sending
        simultaneously */
 
@@ -168,12 +168,12 @@ PROCESS_THREAD(radio_test_process, ev, data)
   //if(recv.onoff) printf("G\n");
   //if(other.onoff) printf("B\n");
 
-      } if(data == &other.timer) {
+      } /*if(data == &other.timer) {
 	set(&other, OFF);
   #if DBG
   printf("O\n");
   #endif
-      } else if(data == &recv.timer) {
+      } else*/ if(data == &recv.timer) {
 	set(&recv, OFF);
   #if DBG
   printf("R\n");
@@ -200,23 +200,28 @@ PROCESS_THREAD(radio_test_process, ev, data)
     //printf("%x\n", data);
     //printf("CLOCK %d\n", CLOCK);
     //if(flash.onoff) printf("R\n");
+    
     packet_slots++;
     if (packet_slots >= PACKETS_PER_SECOND*4) {
-      printf("r=%d o=%d t=%d\n", \
-        recv_count, other_count, PACKETS_PER_SECOND);
+      // printf("r=%d o=%d t=%d\n", \
+      //   recv_count, other_count, PACKETS_PER_SECOND);
+      printf(" %d \n",recv_count);
       int i;
       for(i =0; i<recv_count;++i){
         if(i==PACKETS_PER_SECOND){
-          printf("###|");
+          //printf("###|");
         } else {
-          printf("### ");
+          //printf("### ");
         }
       }
       printf("\n");
       packet_slots = recv_count = other_count = 0;
-
-
     }
+    // if (recv_count >= 10) {
+    //   printf(" %d\n",recv_count);
+    //   recv_count = 0;
+    // }
+
   }
   PROCESS_END();
 }
