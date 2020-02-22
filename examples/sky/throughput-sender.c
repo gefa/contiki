@@ -152,6 +152,12 @@ PROCESS_THREAD(radio_test_process, ev, data)
 	packetbuf_set_datalen(PACKET_SIZE);
 	set(&flash, ON);
 	abc_send(&abc);
+  packetbuf_copyfrom(HEADER, sizeof(HEADER));
+  ((char *)packetbuf_dataptr())[sizeof(HEADER)] = recv.onoff;
+  /* send arbitrary data to fill the packet size */
+  packetbuf_set_datalen(PACKET_SIZE);
+  set(&flash, ON);
+  abc_send(&abc);
   //if(recv.onoff) printf("G\n");
   //if(other.onoff) printf("B\n");
 
